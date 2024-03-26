@@ -1,0 +1,49 @@
+#Instalando Pacman y llamando otros paquetes.
+pacman::p_load(dplyr, sjmisc, car, sjlabelled, stargazer, haven)
+#limpiando R
+rm(list=ls())       
+options(scipen=999)
+#cargando la base de datos
+load(url("https://github.com/Kevin-carrasco/metod1-MCS/raw/main/files/data/external_data/latinobarometro2020.RData"))
+
+#Selección de variables a utilizar
+find_var(data = latinobarometro2020, "Confianza")
+
+proc_data <- latinobarometro2020 %>% 
+  select(p13st_e, p13st_d, p13st_f, p13st_g, reeduc_1, sexo, edad, idenpa)
+#Comprobar la creación de la nueva base
+names(proc_data)
+sjlabelled::get_label(proc_data)
+#Filtrar la base para solo quedar con los datos de Chile
+proc_data <- proc_data %>%
+  dplyr::filter(idenpa==152)
+get_label(latinobarometro2020$p13st_e)
+#Procesamiento de variables
+ ##Descriptivo
+frq(proc_data$p13st_e)
+### Recodificacion
+     ##Reportando los NA
+proc_data <- proc_data %>%
+  set_na(., na = c(-2,-1))
+      ### Reordenando las categorías
+proc_data$p13st_e <- recode(proc_data$p13st_e, "1=3; 2=2; 3=1; 4=0")
+proc_data$p13st_d <- recode(proc_data$p13st_d, "1=3; 2=2; 3=1; 4=0")
+proc_data$p13st_f <- recode(proc_data$p13st_f, "1=3; 2=2; 3=1; 4=0")
+proc_data$p13st_g <- recode(proc_data$p13st_g, "1=3; 2=2; 3=1; 4=0")
+#### Etiquetado
+ # Cambiando nombre
+proc_data <- proc_data %>% 
+  rename("conf_gob"=p13st_e,
+         "conf_cong"=p13st_d,
+         "conf_jud"=p13st_f,
+         "conf_partpol"=p13st_g)
+ #Cambiando etiqueta de las variables
+proc_data$conf_gob <- set_label(x = proc_data$conf_gob, 
+                                label = "Confianza: Gobierno")
+get_label(proc_data$conf_gob)
+proc_data$conf_cong <- set_label(x = proc_data$conf_cong,
+                                 label = "Confianza: Congreso")
+proc_data$conf_jud <- set_label(x = proc_data$conf_jud,
+                                label = "Confianza: Poder Judicial")
+proc_data$conf_partpol <- set_label(x = proc_data$conf_partpol,
+                                    label= "Confianza: Partidos politicos")
