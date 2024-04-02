@@ -87,4 +87,4 @@ get_label(proc_data$edad)
 #Generacion de base de datos proesada para el analisis
 proc_data <- as.data.frame(proc_data)
 stargazer(proc_data, type = "text")
-save(proc_data, file = "ipo/input/latinobarometro_proc.RData")
+save(proc_data, file = "ipo/input/data-proc/latinobarometro_proc.RData")

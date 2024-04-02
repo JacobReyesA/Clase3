@@ -3,9 +3,9 @@
     "path": "~/GitHub/Clase3/ipo/procesamiento/practico3.R",
     "project_path": "ipo/procesamiento/practico3.R",
     "type": "r_source",
-    "hash": "3184173815",
+    "hash": "0",
     "contents": "",
-    "dirty": false,
+    "dirty": true,
     "created": 1712084997447.0,
     "source_on_save": false,
     "relative_order": 1,
@@ -20,7 +20,7 @@
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1712086921659,
+    "last_content_update": 1712087240101,
     "read_only": false,
     "read_only_alternatives": []
 }
