@@ -1,0 +1,188 @@
+#Cargando los paquetes
+pacman::p_load(sjlabelled,
+               dplyr, #Manipulacion de datos
+               stargazer, #Tablas
+               sjmisc, # Tablas
+               summarytools, # Tablas
+               kableExtra, #Tablas
+               sjPlot, #Tablas y gráficos
+               corrplot, # Correlaciones
+               sessioninfo, # Información de la sesión de trabajo
+               ggplot2) # Para la mayoría de los gráficos
+#Cargar la base de datos a utilizar
+load(url("https://github.com/Kevin-carrasco/R-data-analisis/raw/main/files/data/latinobarometro_total.RData")) 
+#Exploración inicial de la base de datos
+
+names(proc_data) #Muestra solo los nombres de las variables la base de datos
+
+dim(proc_data) #Dimensiones de la base de datos (en este caso 20204 casos y 9 variables)
+
+#Descripción de variables
+
+## Tabla descriptiva
+
+stargazer(proc_data, type = "text")
+
+sjmisc::descr(proc_data,
+              show = c("label", "range", "mean", "sd", "NA.prc", "n")) %>%
+              kable(.,"markdown")
+summarytools::dfSummary(proc_data, plain.ascii = FALSE)
+view(dfSummary(proc_data, headings = FALSE))
+
+#Qué hacer con los caso perdidos 
+
+## Primero hacer un respaldo de la base de datos original en caso de que se requiera trabajar con los casos perdidos
+
+proc_data_original <- proc_data
+
+#Contar los casos y los casos perdidos para eliminarlos
+
+dim(proc_data) #Se cuenta el número de casos
+sum(is.na(proc_data)) #Se cuenta el número de casos perdidos
+proc_data <- na.omit(proc_data) #Eliminar los casos perdidos
+dim(proc_data) #Se cuentan de nuevo los casos para asegurarse de que se eliminaron
+
+## Por como funciona R al eliminar los casos perdidos se eliminan todas las etiquetas (labels)
+## estas se pueden recuperar de la base de datos original con la funcion "copylabels()" de la libreria sjlabelled
+
+proc_data <- sjlabelled::copy_labels(proc_data, proc_data_original)
+
+#Visualización de variables
+
+## En general se utiliza el paquete ggplot 2
+
+graph1 <- proc_data %>% 
+  ggplot(aes(x = conf_inst)) + 
+  geom_bar(fill = "Turquoise") +
+  labs(title = "Confianza en instituciones",
+       x = "Confianza en instituciones",
+       y = "Frecuencia") +
+  theme_bw()
+ggsave(graph1, file = "ipo/output/graph1.png") #Se puede guargar
+
+# Exploración de asociación entre variables
+
+##Tablas de contingencia para variables categóricas
+
+sjPlot::sjt.xtab(proc_data$educacion, proc_data$sexo,
+                 show.col.prc = TRUE, 
+                 show.summary = FALSE,
+                 encoding = "UTF-8")
+###Tablas de promedio de variable continua por una categórica.
+
+tapply(proc_data$conf_inst, proc_data$educacion, mean)
+
+#Se puede hacer con dplyr utilizando PIPE %>%
+
+proc_data %>% #se especifica la base de datos
+  select(conf_inst,educacion) %>% #selección de variables
+  dplyr::group_by(Educación=sjlabelled::as_label(educacion)) %>% #se agrupan por la variable categórica y se usan sus etiquetas con as_label()
+  dplyr::summarise(Obs.=n(), Promedio=mean(conf_inst), SD=sd(conf_inst)) %>% #Se agregan las operaciones a presentar en la tabla
+  kable(, format = "markdown") #Se genera la tabla
+
+#Esta asociacion también se puede representar de manera mas simple con un boxplot con la funcion geom_boxplot()
+
+graph <- ggplot(proc_data, aes(x = educacion, y = conf_inst)) +
+  geom_boxplot() +
+  labs(x = "Educación", y = "Confianza en instituciones") + 
+  theme_minimal()
+graph #Al tener promedios tan similares el boxplot no permite ver demasiadas diferencias
+ggsave(graph, file = "ipo/output/graph.png") 
+
+#Entonces necesitaremos obtener exactamente los datos que queremos graficar
+## En este caso es el promedio por cada categoría, para esto volveremos a group_by()
+
+datos <- proc_data %>%
+  group_by(educacion) %>%
+  summarise(promedio = mean(conf_inst))
+ggplot(datos, aes(x = educacion, y = promedio)) + 
+  geom_point() +
+  labs(x = "Educación", y = "Confianza en instituciones") +
+  theme_minimal() +
+  ylim(0, 12)
+
+#El gráfico del código anterior sigue sin evidenciar la diferencia de promedio entre cada categoria
+
+proc_data$idenpa <- factor(proc_data$idenpa,
+                           labels=c("Argentina",
+                                    "Bolivia",
+                                    "Brasil",
+                                    "Chile",
+                                    "Colombia",
+                                    "Costa Rica",
+                                    "Cuba",
+                                    "República Dominicana",
+                                    "Ecuador",
+                                    "El Salvador",
+                                    "Guatemala",
+                                    "Honduras",
+                                    "México",
+                                    "Nicaragua",
+                                    "Panamá",
+                                    "Paraguay",
+                                    "Uruguay",
+                                    "Venezuela"),
+                           levels=c("32",
+                                    "68",
+                                    "76",
+                                    "152",
+                                    "170",
+                                    "188",
+                                    "214",
+                                    "218",
+                                    "222",
+                                    "320",
+                                    "340",
+                                    "484",
+                                    "558",
+                                    "591",
+                                    "600",
+                                    "604",
+                                    "858",
+                                    "862"))
+graph_box <- ggplot(proc_data, aes(x = idenpa, y = conf_inst)) +
+  geom_boxplot() +
+  labs(x = "País", y = "Confianza en instituciones") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) #Esta parte del código rota las etiquetas del eje x
+graph_box
+ggsave(graph_box, file = "ipo/output/graph_box.png")
+
+#Para variables univariadas tipo escala Likert
+graph2 <- sjPlot::plot_stackfrq(dplyr::select(proc_data, conf_gob,
+                                              conf_cong,
+                                              conf_jud,
+                                              conf_partpol),
+                                title = "Confianza en instituciones políticas") +
+  theme(legend.position="bottom")
+graph2
+ggsave(graph2, file="ipo/output/graph2.png")
+#Para asociacion de dos variables
+
+graph3 <- proc_data %>%
+  ggplot(aes(x = conf_inst, fill = sexo)) +
+  geom_bar() +
+  xlab("Confianza en instituciones") + 
+  ylab("Cantidad") +
+  labs(fill = "Sexo") +
+  scale_fill_discrete(labels = c('Hombre', 'Mujer'))
+graph3
+ggsave(graph3, file = "ipo/output/graph3.png")
+
+#Graficos para variables continuas
+
+graph4 <- ggplot(proc_data, aes(x = as.numeric(edad))) +
+  geom_histogram(binwidth=0.6, colour="blue", fill="red") + 
+  theme_bw() +
+  xlab("Edad") + 
+  ylab("Cantidad")
+graph4
+ggsave(graph4, file = "ipo/output/graph4.png")
+
+#Asociación entre tres variables
+
+datos <- proc_data %>%
+  group_by(educacion, sexo) %>%
+  summarise(promedio = mean(conf_inst))
+
+#Unir base de datos
