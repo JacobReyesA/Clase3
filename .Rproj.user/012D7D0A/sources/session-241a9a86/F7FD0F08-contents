@@ -186,3 +186,5 @@ datos <- proc_data %>%
   summarise(promedio = mean(conf_inst))
 
 #Unir base de datos
+load(url("https://github.com/Kevin-carrasco/R-data-analisis/raw/main/files/data/latinobarometro_total.RData")) #Cargar base de datos
+load(url("https://github.com/Kevin-carrasco/R-data-analisis/raw/main/files/data/data_wvs.RData")) #Cargar base de datos

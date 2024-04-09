@@ -1,0 +1,6 @@
+"0","data %>%"
+"0","  ggplot(aes(x = gdp, y = promedio, label = idenpa)) +"
+"0","  geom_point() +"
+"0","  geom_text(vjust = -0.5) +"
+"0","  labs(x = ""GDP"", y = ""Promedio"") +"
+"0","  theme_bw()"

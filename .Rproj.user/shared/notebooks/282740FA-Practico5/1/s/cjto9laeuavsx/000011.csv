@@ -1,0 +1,8 @@
+"0","#| label: fig-gdp"
+"0","#| fig-cap: “PIB por país ordenado”"
+"0","data_sorted <- data %>% arrange(desc(gdp))"
+"0","ggplot(data_sorted, aes(x = factor(idenpa, levels = idenpa), y = gdp)) +"
+"0","  geom_point() +"
+"0","  labs(x = ""País"", y = ""GDP"") +"
+"0","  theme_minimal() +"
+"0","  theme(axis.text.x = element_text(angle = 45, hjust = 1))"

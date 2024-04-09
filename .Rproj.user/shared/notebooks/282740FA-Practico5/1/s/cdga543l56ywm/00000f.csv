@@ -1,0 +1,3 @@
+"0","sjmisc::descr(data,"
+"0","      show = c(""label"",""range"", ""mean"", ""sd"", ""NA.prc"", ""n""))%>% # Selecciona estadísticos"
+"0","      kable(.,""markdown"") # Esto es para que se vea bien en quarto"
