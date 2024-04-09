@@ -28,7 +28,8 @@ load(url("https://github.com/Kevin-carrasco/R-data-analisis/raw/main/files/data/
 load(url("https://github.com/Kevin-carrasco/R-data-analisis/raw/main/files/data/data_wvs.RData")) #Cargar base de datos
 ```
 
-Se agruparán las variables de interés por país, por lo que ya no se trabajará directamente con individuos, esto se realizará con el siguiente código:\
+Se agruparán las variables de interés por país\[^2\]\ nota\ al\ pie\ ,\ por\ lo\ que\ ya\ no\ se\ trabajará\ directamente\ con\ individuos,\ esto\ se\ realizará\ con\ el\ siguiente\ código:\
+\[\^2\]:\ nota\ al\ pie?^
 
 ```{r}
 context_data <- wvs %>% group_by(B_COUNTRY) %>% # Agrupar por país
@@ -123,6 +124,8 @@ en la @fig-gdp2 podemos observar que está mejor ordenado que el gráfico anteri
 Comparación del promedio de confianza en instituciones según el PIB de cada país
 
 ```{r}
+#| label: fig-gdp3
+#| fig-cap: “Confianza en instituciones según el producto interno bruto por país”
 data %>%
   ggplot(aes(x = gdp, y = promedio, label = idenpa)) +
   geom_point() +
@@ -130,3 +133,5 @@ data %>%
   labs(x = "GDP", y = "Promedio") +
   theme_bw()
 ```
+
+la @fig-gdp3 muestra la relación que existe entre el (...)

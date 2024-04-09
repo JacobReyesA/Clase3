@@ -117,8 +117,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="fu">url</span>(<span class="st">"https://github.com/Kevin-carrasco/R-data-analisis/raw/main/files/data/latinobarometro_total.RData"</span>)) <span class="co">#Cargar base de datos</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="fu">url</span>(<span class="st">"https://github.com/Kevin-carrasco/R-data-analisis/raw/main/files/data/data_wvs.RData"</span>)) <span class="co">#Cargar base de datos</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Se agruparán las variables de interés por país, por lo que ya no se trabajará directamente con individuos, esto se realizará con el siguiente código:<br>
-</p>
+<p>Se agruparán las variables de interés por país[^2]&nbsp;nota&nbsp;al&nbsp;pie&nbsp;,&nbsp;por&nbsp;lo&nbsp;que&nbsp;ya&nbsp;no&nbsp;se&nbsp;trabajará&nbsp;directamente&nbsp;con&nbsp;individuos,&nbsp;esto&nbsp;se&nbsp;realizará&nbsp;con&nbsp;el&nbsp;siguiente&nbsp;código:<br>
+[^2]:&nbsp;nota&nbsp;al&nbsp;pie?^</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>context_data <span class="ot">&lt;-</span> wvs <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(B_COUNTRY) <span class="sc">%&gt;%</span> <span class="co"># Agrupar por país</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">gdp =</span> <span class="fu">mean</span>(GDPpercap1, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="co"># Promedio de GDP per capita</span></span>
@@ -290,9 +290,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"GDP"</span>, <span class="at">y =</span> <span class="st">"Promedio"</span>) <span class="sc">+</span></span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Practico5_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+<div id="fig-gdp3" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Practico5_files/figure-html/fig-gdp3-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;3: “Confianza en instituciones según el producto interno bruto por país”</figcaption>
+</figure>
 </div>
 </div>
+</div>
+<p>la <a href="#fig-gdp3">Figure&nbsp;3</a> muestra la relación que existe entre el (…)</p>
 </section>
 </section>
 </section>
